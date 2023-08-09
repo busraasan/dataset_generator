@@ -18,6 +18,7 @@ class GeneratorConfig:
     canvas_size = 512
     included_shapes = ["circle", "square", "text"]
     shape_locations = ["random", "random", "title"]
+    shape_count = [2, 3, 1]
     
     custom_position_dict = {
         "title": None,
@@ -27,4 +28,8 @@ class GeneratorConfig:
     }
 
     # Color settings
-    fixed_lightness_difference = 20
+    fixed_lightness_difference = 30
+
+    # Text settings
+    title = "Lorem Ipsum Dolor"
+    undertitle = "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, \n consectetur, adipisci velit..."
