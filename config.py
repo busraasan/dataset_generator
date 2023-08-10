@@ -15,6 +15,8 @@ class GeneratorConfig:
             2 - Squares have the same color
             3 - Background and Text has a fixed distance between them
     """
+    dataset_size = 3100 # remember that we have max 3100 color palettes
+    dataset_path = "../shape_dataset"
     canvas_size = 512
     included_shapes = ["circle", "square", "text"]
     shape_locations = ["random", "random", "title"]
@@ -28,7 +30,7 @@ class GeneratorConfig:
     }
 
     # Color settings
-    fixed_lightness_difference = 30
+    contrast_ratio = 3
 
     # Text settings
     title = "Lorem Ipsum Dolor"
