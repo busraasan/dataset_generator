@@ -14,8 +14,9 @@ undertitle = config.undertitle
 contrast_ratio = config.contrast_ratio
 dataset_size = config.dataset_size
 dataset_path = config.dataset_path
+json_file = config.json_file
 
-elements = ["preview", "background", "image", "text"]
+elements = ["preview", "background", "image", "text", "decoration"]
 
 img_path_dict = {
     'preview': dataset_path + '/00_preview/',
@@ -40,6 +41,7 @@ for element in elements:
     if not os.path.exists(img_path_dict[element]):
         os.mkdir(img_path_dict[element])
     if not os.path.exists(annotation_path_dict[element]):
+        print("hello")
         os.mkdir(annotation_path_dict[element])
 
 for k in range(dataset_size):
@@ -57,7 +59,7 @@ for k in range(dataset_size):
     }
 
     # Pick color and select lightness
-    colors = color_picker()
+    colors = color_picker(json_file=json_file)
     cielab_text = RGB2CIELab(colors[0])
     L = cielab_text[0][0]
     name = "{:04d}".format(k)
@@ -136,11 +138,11 @@ for k in range(dataset_size):
                 y = random.randint(title_y+title_height+text_height+50, 512-(rad+10))
 
             if shape == "circle":
-                draw.ellipse((x, y, x+rad, y+rad), fill=colors[2])
+                draw.ellipse((x, y, x+rad, y+rad), fill=colors[1])
                 bbox = [x-5, y-5, x+rad+5, y+rad+5]
                 shape_bboxes.append(bbox)
             elif shape == "square":
-                draw.rectangle((x, y, x+rad, y+rad), fill=colors[3])
+                draw.rectangle((x, y, x+rad, y+rad), fill=colors[2])
                 bbox = [x-5, y-5, x+rad+5, y+rad+5]
                 shape_bboxes.append(bbox)
             elif shape == "text":

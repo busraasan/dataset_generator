@@ -1,6 +1,6 @@
 import json
 import random
-from matplotlib.colors import to_rgb
+from matplotlib.colors import to_rgb, to_hex
 from colormath.color_objects import sRGBColor, HSVColor, LabColor, LCHuvColor, XYZColor, LCHabColor, AdobeRGBColor
 from colormath.color_conversions import convert_color
 import numpy as np
@@ -10,12 +10,13 @@ import os
 import cv2
 import torch
 import matplotlib.pyplot as plt
+from itertools import permutations
 
-def color_picker(normalized=False):
+def color_picker(json_file, normalized=False):
     """
         Return normalized RGB tuples from colorhunt json file.
     """
-    f = open("colorhunt.json")
+    f = open(json_file)
     data = json.load(f)
     palettes = data["palettes"]
     num_palettes = len(palettes)
@@ -23,14 +24,52 @@ def color_picker(normalized=False):
     
     colors = palettes[palette_num]["code"]
     rgb_list = []
-    for i in range(0,len(colors), 6):
+
+    for i in range(0, len(colors), 6):
         if normalized:
             rgb_list.append(to_rgb("#"+colors[i:i+6]))
         else:
             r, g, b = to_rgb("#"+colors[i:i+6])
             rgb_list.append((int(r*255), int(g*255), int(b*255)))
+
+
     return rgb_list
 
+def extend_colorhunt(normalized=False):
+
+    f = open("colorhunt.json")
+    data = json.load(f)
+    palettes = data["palettes"]
+    categories = data["categories"]
+    num_palettes = len(palettes)
+
+    with open('extended_colorhunt.json', 'r+') as ff:
+        # {"code":"c8e4b29ed2be7eaa92ffd9b7","likes":726,"date":"2023-08-03T16:39:33.895Z","tags":"sage green teal peach pastel nature summer kids light food"}
+        perms = list(permutations([0, 1, 2, 3], r=3))
+
+        for j in range(num_palettes):
+            for i in range(len(perms)):
+                if i == 0:
+                    continue
+                else:
+                    palette = palettes[j]["code"]
+                    perm = perms[i]
+                    rgb_list = []
+                    for i in range(0, len(palette), 6):
+                        r, g, b = to_rgb("#"+palette[i:i+6])
+                        rgb_list.append((int(r*255), int(g*255), int(b*255)))
+                    
+                    new_palette = [rgb_list[perm[0]], rgb_list[perm[1]], rgb_list[perm[2]]]
+                    hex_list = [to_hex(np.array(list(color))/255) for color in new_palette]
+                    code = ""
+                    for hex in hex_list:
+                        code += hex[1:]
+                    code = {"code":code,"likes":455,"date":"2023-08-10","tags":"none"}
+                    palettes.append(code)
+        
+        new_data = {"categories": categories, "palettes":palettes}
+        json.dump(new_data, ff)
+                    
 def RGB2CIELab(palette):
     obj_palette = []
     for color in [palette]:
@@ -176,4 +215,4 @@ def check_distributions(colors=None):
     plt.close()
 
 if __name__ == "__main__":
-    check_distributions()
+    extend_colorhunt()

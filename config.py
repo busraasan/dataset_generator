@@ -16,11 +16,12 @@ class GeneratorConfig:
             3 - Background and Text has a fixed distance between them
     """
     dataset_size = 3100 # remember that we have max 3100 color palettes
-    dataset_path = "../shape_dataset"
+    dataset_path = "../shape_dataset_extended"
     canvas_size = 512
     included_shapes = ["circle", "square", "text"]
     shape_locations = ["random", "random", "title"]
     shape_count = [2, 3, 1]
+    json_file = "extended_colorhunt.json"
     
     custom_position_dict = {
         "title": None,
